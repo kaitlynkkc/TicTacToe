@@ -4,134 +4,112 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     var clickCount = 0
+    lateinit var buttons : Array<Button>
+    var p1 = arrayOfNulls<Button>(9)
+    var p2 = arrayOfNulls<Button>(9)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        buttons = arrayOf(button1, button2, button3, button4, button5, button6, button7, button8, button9)
     }
 
     fun onClick(view: View) {
         view as Button
+        var buttonNum = view.id.toString().substring(view.id.toString().length-1).toInt()
         if(clickCount%2 == 1 && view.text == "") {
             view.text = "X"
+            p1[buttonNum] = view
             clickCount++
-//            if (winner()) {
-//                button1.isEnabled = false
-//                button2.isEnabled = false
-//                button3.isEnabled = false
-//                button4.isEnabled = false
-//                button5.isEnabled = false
-//                button6.isEnabled = false
-//                button7.isEnabled = false
-//                button8.isEnabled = false
-//                button9.isEnabled = false
-//                clickCount = 0
-//            } else if (clickCount == 9) {
-//                winner.text = "CAT!"
-//            }
+            if (winner(p1)) {
+                Toast.makeText(this, "X Wins!", Toast.LENGTH_LONG).show()
+                for (button in buttons) {
+                    button.isEnabled = false
+                }
+            } else if (clickCount == 9) {
+                Toast.makeText(this, "CAT!", Toast.LENGTH_LONG).show()
+            }
         } else if (clickCount%2 == 0 && view.text == "") {
             view.text = "O"
+            p2[buttonNum] = view
             clickCount++
-//            if (winner()) {
-//                button1.isEnabled = false
-//                button2.isEnabled = false
-//                button3.isEnabled = false
-//                button4.isEnabled = false
-//                button5.isEnabled = false
-//                button6.isEnabled = false
-//                button7.isEnabled = false
-//                button8.isEnabled = false
-//                button9.isEnabled = false
-//                clickCount = 0
-//            } else if (clickCount == 9) {
-//                winner.text = "CAT!"
-//            }
+            if (winner(p2)) {
+                Toast.makeText(this, "O Wins!", Toast.LENGTH_LONG).show()
+                for (button in buttons) {
+                    button.isEnabled = false
+                }
+            } else if (clickCount == 9) {
+                Toast.makeText(this, "CAT!", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
     fun newGame(view: View) {
-        button1.text = ""
-        button2.text = ""
-        button3.text = ""
-        button4.text = ""
-        button5.text = ""
-        button6.text = ""
-        button7.text = ""
-        button8.text = ""
-        button9.text = ""
-        button1.isEnabled = true
-        button2.isEnabled = true
-        button3.isEnabled = true
-        button4.isEnabled = true
-        button5.isEnabled = true
-        button6.isEnabled = true
-        button7.isEnabled = true
-        button8.isEnabled = true
-        button9.isEnabled = true
-        winner.text = ""
+        for (button in buttons) {
+            button.text = ""
+            button.isEnabled = true
+        }
+        for (i in 0..8) {
+            p1[i] = null
+            p2[i] = null
+        }
         clickCount = 0
     }
 
-//    private fun winner(): Boolean {
-//        //row 1
-//        if (button1.text == button2.text && button1.text == button3.text) {
-//            if (button1.text !== "") {
-//                winner.text = button1.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //row 2
-//        else if (button4.text == button5.text && button4.text == button6.text) {
-//            if (button4.text !== "") {
-//                winner.text = button4.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //row 3
-//        else if (button7.text == button8.text && button7.text == button9.text) {
-//            if (button7.text !== "") {
-//                winner.text = button7.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //col 1
-//        else if (button1.text == button4.text && button1.text == button7.text) {
-//            if (button1.text !== "") {
-//                winner.text = button1.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //col 2
-//        else if (button2.text == button5.text && button2.text == button8.text) {
-//            if (button2.text !== "") {
-//                winner.text = button2.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //col 3
-//        else if (button3.text == button6.text && button3.text == button9.text) {
-//            if (button3.text !== "") {
-//                winner.text = button3.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //cross 1
-//        else if (button1.text == button5.text && button1.text == button9.text) {
-//            if (button1.text !== "") {
-//                winner.text = button1.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        //cross 2
-//        else if (button3.text == button5.text && button3.text == button7.text) {
-//            if (button3.text !== "") {
-//                winner.text = button3.text.toString() + " Wins!"
-//                return true
-//            }
-//        }
-//        return false
-//    }
+    private fun winner(player: Array<Button?>): Boolean {
+        //row1
+        if (player.contains(button1) && player.contains(button2) && player.contains(button3))
+        {
+            return true
+        }
+
+        //row2
+        if (player.contains(button4) && player.contains(button5) && player.contains(button6))
+        {
+            return true
+        }
+
+        //row3
+        if (player.contains(button7) && player.contains(button8) && player.contains(button9))
+        {
+            return true
+        }
+
+        //col1
+        if (player.contains(button1) && player.contains(button4) && player.contains(button7))
+        {
+            return true
+        }
+
+        //col2
+        if (player.contains(button2) && player.contains(button5) && player.contains(button8))
+        {
+            return true
+        }
+
+        //col3
+        if (player.contains(button3) && player.contains(button6) && player.contains(button9))
+        {
+            return true
+        }
+
+        //cross1
+        if (player.contains(button1) && player.contains(button5) && player.contains(button9))
+        {
+            return true
+        }
+
+        //cross2
+        if (player.contains(button3) && player.contains(button5) && player.contains(button7))
+        {
+            return true
+        }
+
+        return false
+    }
 }
